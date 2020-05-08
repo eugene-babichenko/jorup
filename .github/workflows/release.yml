@@ -66,10 +66,6 @@ jobs:
           command: rustc
           args: --release --target ${{ matrix.config.target }} -- -C lto
 
-      - name: Rename jorup (*nix)
-        if: matrix.config.os != 'windows-latest'
-        run: mv ./target/${{ matrix.config.target }}/release/jorup ./jorup-${{ steps.get_version.outputs.version }}-${{ matrix.config.target }}
-
       - name: Rename jorup (Windows)
         if: matrix.config.os == 'windows-latest'
         run: mv ./target/${{ matrix.config.target }}/release/jorup.exe ./jorup-init.exe
@@ -81,7 +77,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_name: ./jorup-${{ steps.get_version.outputs.version }}-${{ matrix.config.target }}
+          asset_name: jorup-${{ steps.get_version.outputs.version }}-${{ matrix.config.target }}
+          asset_path: ./target/${{ matrix.config.target }}/release/jorup
           asset_content_type: application/octet-stream
 
       - name: Upload release assets (Windows)
@@ -91,5 +88,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_name: ./jorup-init.exe
+          asset_name: jorup-init.exe
+          asset_path: ./target/${{ matrix.config.target }}/release/jorup
           asset_content_type: application/octet-stream
