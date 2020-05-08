@@ -74,11 +74,6 @@ jobs:
         if: matrix.config.os == 'windows-latest'
         run: mv ./target/${{ matrix.config.target }}/release/jorup.exe ./jorup-init.exe
 
-      - name: Get upload url
-        id: get_upload_url
-        shell: bash
-        run: echo ::set-output name=upload_url::``cat $GITHUB_EVENT_PATH | jq .release.upload_url``
-
       - name: Upload release assets (*nix)
         if: matrix.config.os != 'windows-latest'
         uses: actions/upload-release-asset@v1
